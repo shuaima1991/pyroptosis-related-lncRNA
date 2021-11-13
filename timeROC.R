@@ -1,5 +1,5 @@
-setwd("D:/Rcode/文章思路/细胞焦亡相关lncRNA/TCGA高低分组/时间ROC")
-rt=read.table("输入文件.txt",header=T,sep="\t",check.names=F)    #读取cox回归风险文件
+setwd("")
+rt=read.table("input.txt",header=T,sep="\t",check.names=F)    
 library(timeROC)
 library(survival)
 rt$futime=rt$futime/12
@@ -10,7 +10,7 @@ ROC_rt <- timeROC(T=rt$futime,delta=rt$fustat,
                  weighting='marginal',
 
                  times=c(1,3,5,7,10),ROC=TRUE)
-#画图
+
 
 plot(ROC_rt,time=1,title=FALSE,lwd=2)
 plot(ROC_rt,time=3,col='blue',add=TRUE,title=FALSE,lwd=2)
