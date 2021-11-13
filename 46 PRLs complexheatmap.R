@@ -1,8 +1,8 @@
-setwd("D:/Rcode/文章思路/细胞焦亡相关lncRNA/46lncRNA census cluster/46基因热图")
+setwd("")
 library(ComplexHeatmap)
 library(circlize)
 library(RColorBrewer)
-rt=read.table("46lncRNA输入文件.txt",header = T,row.names = 1,sep = "\t")
+rt=read.table("46lncRNAinput.txt",header = T,row.names = 1,sep = "\t")
 metadata=read.table("metadata.tsv.txt",header = T,row.names = 1,sep="\t")
 rt=as.matrix(rt)
 
@@ -10,7 +10,7 @@ metadata[1:6,1:4]
 Type <- metadata$Type
 Type <- Type[!is.na(Type)] 
 length(unique(Type)) #5
-# 可以设置一个主色（比如绿色），然后从中挑出对应的颜色
+# 
 pick.col <- brewer.pal(9, 'Greens') # allowed maximum for palette Greens is 9
 col.Type <- colorRampPalette(pick.col)(length(unique(Type)))
 
@@ -52,7 +52,7 @@ stromal.score <- stromal.score[!is.na(stromal.score)]
 pick.col <- brewer.pal(9, 'Purples')
 col.stromal.score <- colorRampPalette(pick.col)(length(unique(stromal.score)))
 
-# 首先得到样本信息数据框
+# 
 ann <- data.frame(
   Type = metadata$Type,
   Grade = metadata$Grade,
@@ -62,7 +62,7 @@ ann <- data.frame(
   Vital.status=metadata$Vital.status,
   immune.score= metadata$immune.score,
   stromal.score= metadata$stromal.score)
-# 然后是颜色列表
+# 
 names(col.Type)=as.character(0:1)
 names(col.Grade)=as.character(0:2)
 names(col.Gender)=as.character(0:1)
@@ -83,11 +83,11 @@ colAnn <- HeatmapAnnotation(
   df = ann,
   col = colors,
   which = 'col', # set 'col' (samples) or 'row' (gene) annotation
-  na_col = 'white', # NA颜色，默认白色
+  na_col = 'white', # NA
   annotation_height = 0.6,
   annotation_width = unit(1, 'cm'),
   gap = unit(1, 'mm'),
-  # 下面这个都是类似的设置：占几行、标题、字体等
+  # 
   annotation_legend_param = list(
     Type = list(
       nrow = 2,
@@ -138,11 +138,11 @@ colAnn <- HeatmapAnnotation(
       legend_direction = 'vertical',
       title_gp = gpar(fontsize = 12, fontface = 'bold'),
       labels_gp = gpar(fontsize = 12, fontface = 'bold'))))
-# 构建颜色转变函数,数值将按照线性转变为对应的颜色，这里seq设置z-score显示-3到3的颜色
+# 
 library(circlize)
 rt=t(scale(t(rt)))
 col_fun = colorRamp2(c(-1, 0, 1),c('#1E90FF', 'white', '#FF4500'))
 group_list=c(rep('cluster1',412),rep('cluster2',197))
-#cluster_columns = FALSE使注释第一列按照聚类排列
+#cluster_columns = FALSE
 Heatmap(rt, name = "mat", col = col_fun,show_column_names = FALSE,top_annotation = colAnn,cluster_columns = FALSE,column_split = group_list)
 
