@@ -2,8 +2,8 @@
 library("glmnet")
 library("survival")
 
-setwd("D:/Rcode/文章思路/细胞焦亡相关lncRNA/9基因lasso建模")                #设置工作目录
-rt=read.table("lasso输入文件.txt",header=T,sep="\t",row.names=1)       #读取文件
+setwd("")               
+rt=read.table("lasso杈撳叆鏂囦欢.txt",header=T,sep="\t",row.names=1)       
 #rt$Survival_time=rt$Survival_time/365
 rt$Survival_time=rt$Survival_time+0.04
 rt$Survival_time=rt$Survival_time/12
