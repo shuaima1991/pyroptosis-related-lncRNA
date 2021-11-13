@@ -5,59 +5,57 @@ library(RColorBrewer)
 
 options(stringsAsFactors = F)
 
-setwd("D:/Rcode/ÎÄÕÂË¼Â·/Ï¸°û½¹ÍöÏà¹ØlncRNA/46lncRNAÓë11½¹Íö»ùÒòÏà¹ØĞÔ")        #ÉèÖÃ¹¤×÷Ä¿Â¼
-up <- read.table("pvalue.txt",sep = "\t",check.names = F,header = T,row.names=1)  #¶ÁÈ¡×óÉÏ½ÇµÄÊı¾İ
-dn <- read.table("cor.txt",sep = "\t",check.names = F,header = T,row.names=1)     #¶ÁÈ¡ÓÒÏÂ½ÇÊı¾İ
+setwd("")        
+up <- read.table("pvalue.txt",sep = "\t",check.names = F,header = T,row.names=1)  
+dn <- read.table("cor.txt",sep = "\t",check.names = F,header = T,row.names=1)     
 dn=t(dn)
 up=t(up)
-#ÉèÖÃÑÕÉ«
+
 colVector=c("#AB221F","#3878C1","#FFFADD")
 
-#ĞĞÃûºÍÁĞÃû
+
 gene.level <- as.character(rownames(dn)) 
 cancer.level <- as.character(colnames(dn))
 
-#°ÑĞĞ×ªÎªÁĞ
 dn.long <- setNames(melt(dn), c('Gene', 'Cancer', 'Frequency'))
 dn.long$Categrory <- "DN"
 up.long <- setNames(melt(up), c('Gene', 'Cancer', 'Frequency'))
 up.long$Categrory <- "UP"
 
-#ÓÒÏÂ½ÇÑÕÉ«
 dn.long$range <- cut(dn.long$Frequency, 
                      breaks = seq(floor(min(dn.long$Frequency)),
                                   ceiling(max(dn.long$Frequency)),0.01))
-rangeMat1 <- levels(dn.long$range) # Ìá³ö·Ö¸îÇø¼ä
+rangeMat1 <- levels(dn.long$range) 
 rbPal1 <- colorRampPalette(colors = c(colVector[3],"white",colVector[1]))
 col.vec1 <- rbPal1(length(rangeMat1)); names(col.vec1) <- rangeMat1
 dn.long$color <- col.vec1[as.character(dn.long$range)]
 
-#×óÉÏ½ÇÑÕÉ«
+
 up.long$range <- cut(up.long$Frequency, breaks = seq(floor(min(up.long$Frequency)),ceiling(max(up.long$Frequency)),0.01)) 
 rangeMat2 <- levels(up.long$range)
 rbPal2 <- colorRampPalette(colors = c(colVector[3],colVector[2]))
 col.vec2 <- rbPal2(length(rangeMat2)); names(col.vec2) <- rangeMat2
 up.long$color <- col.vec2[as.character(up.long$range)]
 
-#ºÏ²¢ÓÒÏÂ½ÇºÍ×óÉÏ½Ç
-heatmat <- rbind.data.frame(dn.long,up.long) #»ã×ÜÈÈÍ¼¾ØÕó
+
+heatmat <- rbind.data.frame(dn.long,up.long) 
 pdf("heatmap2.pdf",width = 9,height = 4)
 layout(mat=matrix(c(1,0,1,2,1,0,1,3,1,0),5,2,byrow=T),widths=c(length(cancer.level),2))
 
-#ÈÈÍ¼»æÖÆÇøÓò
+
 par(bty="n", mgp = c(2,0.5,0), mar = c(5.1, 5.5, 3, 3),tcl=-.25,xpd = T)
 x=as.numeric(factor(heatmat$Cancer,levels = cancer.level))
 y=as.numeric(factor(heatmat$Gene,levels = gene.level))
-#´´½¨¿Õ°×»­²¼
+
 plot(1,xlim=c(1,length(unique(x))+1),ylim=c(1,length(unique(y))+1),
      xaxs="i", yaxs="i",xaxt="n",yaxt="n",
      type="n",bty="n",xlab="",ylab="",
      main = "Coexpression across cancer types",cex.main=2)
-#Ìî³äÑÕÉ«
+
 for(i in 1:nrow(heatmat)) {
-    if(heatmat$Categrory[i]=="DN") polygon(x[i]+c(0,1,1),y[i]+c(0,0,1),col=heatmat$color[i]) #Ìî³ä×óÉÏ½Ç
+    if(heatmat$Categrory[i]=="DN") polygon(x[i]+c(0,1,1),y[i]+c(0,0,1),col=heatmat$color[i]) #å¡«å……å·¦ä¸Šè§’
     if(heatmat$Categrory[i]=="UP") {
-        polygon(x[i]+c(0,1,0),y[i]+c(0,1,1),col=heatmat$color[i]) #Ìî³äÓÒÏÂ½Ç
+        polygon(x[i]+c(0,1,0),y[i]+c(0,1,1),col=heatmat$color[i]) #å¡«å……å³ä¸‹è§’
         if(heatmat$Frequency[i]<0.001){
             text(x[i]+0.5,y[i]+0.8,"***",cex=0.8)
         }else if(heatmat$Frequency[i]<0.01){
@@ -67,12 +65,12 @@ for(i in 1:nrow(heatmat)) {
         }
     }
 }
-#»ùÒòÃûºÍ°©Ö¢Ãû
-axis(1,at = sort(unique(x)) + 0.5,labels = cancer.level,lty = 0,las = 2)  #Ìí¼ÓxÖá×ø±ê
-axis(2,at = sort(unique(y)) + 0.5,labels = gene.level,lty = 0,las = 1)    #Ìí¼ÓyÖá×ø±ê
-mtext("Cancer types",side = 1,line = 3.5,cex=1.2)    #xÖáÃû³Æ
 
-#»æÖÆÍ¼Àı
+axis(1,at = sort(unique(x)) + 0.5,labels = cancer.level,lty = 0,las = 2)  #æ·»åŠ xè½´åæ ‡
+axis(2,at = sort(unique(y)) + 0.5,labels = gene.level,lty = 0,las = 1)    #æ·»åŠ yè½´åæ ‡
+mtext("Cancer types",side = 1,line = 3.5,cex=1.2)    #xè½´åç§°
+
+
 par(mar=c(0,0,0,2),xpd = T,cex.axis=1.6)
 barplot(rep(1,length(col.vec2)),border = NA, space = 0,ylab="",xlab="",ylim=c(1,length(col.vec2)),horiz=TRUE,
         axes = F, col=col.vec2)  # Loss
