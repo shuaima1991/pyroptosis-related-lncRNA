@@ -1,5 +1,5 @@
 
-setwd("D:/Rcode/文章思路/细胞焦亡相关lncRNA/TCGA高低分组/风险评分与级别，分型等关系小雅作图")
+setwd("")
 library(GEOquery)
 library(dplyr)
 library(limma)
@@ -9,9 +9,9 @@ library(clusterProfiler)
 library(tibble)
 library(ggplot2)
 library(cowplot)
-Sys.setenv(LANGUAGE = "en") #显示英文报错信息
-options(stringsAsFactors = FALSE) #禁止chr转成factor
-input=read.table("输入文件.txt",header = T,sep = "\t")
+Sys.setenv(LANGUAGE = "en") 
+options(stringsAsFactors = FALSE) 
+input=read.table("input.txt",header = T,sep = "\t")
 
 input <- as.matrix(input)
 input[is.na(input)] <- "Unknown"
@@ -25,11 +25,11 @@ input$IDH.codel.subtype <- factor(input$IDH.codel.subtype,levels = c("IDHmut-cod
 input$Grade <- factor(input$Grade,levels = c("G2","G3","G4"))
 input$index <- 1:nrow(input)
 
-# 画图
+
 darkred   <- "#F2042C"
 blue      <- "#0A0745"
 lightgrey <- "#dcddde"
-# 自定义主题
+
 My_Theme1 <- theme_bw() + 
   theme(panel.grid =element_blank()) + 
   theme(panel.border = element_rect(size = 1)) + 
@@ -61,28 +61,28 @@ p2 <- ggplot(input,aes(index,1))+
   My_Theme2+
   labs(y = "Histology")+
   scale_fill_manual(values = c("#74C065","#B096C2","#FAA96C","#EFF882")) +
-  scale_x_continuous(expand = c(0,0)) #不留空
+  scale_x_continuous(expand = c(0,0)) 
 
 p3 <- ggplot(input,aes(index,1))+
   geom_tile(aes(fill = IDH.status))+
   My_Theme2+
   labs(y = "IDH.status")+
   scale_fill_manual(values = c("#84CBA8","#F2FA9C","#6D6466")) +
-  scale_x_continuous(expand = c(0,0)) #不留空
+  scale_x_continuous(expand = c(0,0)) 
 
 p4 <- ggplot(input,aes(index,1))+
   geom_tile(aes(fill = Gender))+
   My_Theme2+
   labs(y = "Gender")+
   scale_fill_manual(values=c("#E00F0A","#3D6197")) +
-  scale_x_continuous(expand = c(0,0)) #不留空  
+  scale_x_continuous(expand = c(0,0)) 
 
 p5 <- ggplot(input,aes(index,1))+
   geom_tile(aes(fill = X1p.19q.codeletion))+
   My_Theme2 +
   labs(y = "X1p.19q.codeletion")+
   scale_fill_manual(values=c("#64B685","#FC6D4C","#6D6466")) +
-  scale_x_continuous(expand = c(0,0)) #不留空
+  scale_x_continuous(expand = c(0,0)) 
 
 p6 <- ggplot(input,aes(index,1))+
   geom_tile(aes(fill = IDH.codel.subtype))+
@@ -96,7 +96,7 @@ p7 <- ggplot(input,aes(index,1))+
   My_Theme2 +
   labs(y = "Grade")+
   scale_fill_manual(values=c("#D2691E","#CDCD00","#EE2C2C")) +
-  scale_x_continuous(expand = c(0,0)) #不留空
+  scale_x_continuous(expand = c(0,0)) 
 
 legend_a <- get_legend(p2+theme(legend.position = "bottom"))
 legend_b <- get_legend(p3+theme(legend.position = "bottom"))
