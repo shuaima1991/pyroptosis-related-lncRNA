@@ -1,8 +1,8 @@
-setwd("D:/Rcode/文章思路/细胞焦亡相关lncRNA/2分类突变全景图/CNV/cluster1 GISTIC")
+setwd("")
 options("repos"= c(CRAN="https://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
 library(BSgenome.Hsapiens.UCSC.hg19)
-Sys.setenv(LANGUAGE = "en") #显示英文报错信息
-options(stringsAsFactors = FALSE) #禁止chr转成factor
+Sys.setenv(LANGUAGE = "en")
+options(stringsAsFactors = FALSE) 
 # Create a chromosomes reference objects function
 ### segment information
 
@@ -74,7 +74,7 @@ col2 <- adjustcolor("midnightblue", alpha.f = .8)
 # The position of the legend can be specified also using the following keywords : "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright", "right" and "center".
 legend("topleft", c("gain","loss"), cex=0.6, bty="n", fill=c(col1,col2))
 
-#画全部样本的percentage/frequency
+
 #pdf("ESCA_copy_number_percentage.pdf",12,15)
 scores.amp <- scores[scores$Type=="Amp",]
 scores.amp$frequency<- scores.amp$frequency * 100
